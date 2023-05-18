@@ -1,0 +1,103 @@
+[
+  {
+
+    "retailid": "public_retailid",
+    "marsid": "public_marsid",
+    "cpid": "public_cpid",
+    "healthid": "public_healthid",
+    "retailurl": "https://dev-cn-mars.lorealpos.com/APAC-CN-DEV-RETAILAPI/v1/mars/HealthCheck?WebApp=APAC-CN-DEV",
+    "marsurl": "https://api-dev-cn-mars.lorealpos.com/APAC-CN-DEV-API/Services/HealthCheckService.svc/FullHealthCheck?WebApp=APAC-CN-DEV",
+    "cpurl": "https://dev-cn-mars.lorealpos.com/APAC-CN-DEV-CP/api/HealthCheck?WebApp=APAC-CN-DEV",
+    "healthurl": "https://dev-cn-mars.lorealpos.com/APAC-CN-DEV/Health/MarsHealthCheck.aspx?timeout=3000"
+  },
+  {
+
+    "retailid": "retailid1",
+    "marsid": "marsid1",
+    "cpid": "cpid1",
+    "healthid": "healthid1",
+    "retailurl": "http://CNCORPAZDMARW01.ap.loreal.intra/APAC-CN-DEV-RETAILAPI/v1/mars/HealthCheck?WebApp=APAC-CN-DEV",
+    "marsurl": "http://CNCORPAZDMARW01.ap.loreal.intra/APAC-CN-DEV-API/Services/HealthCheckService.svc/FullHealthCheck?WebApp=APAC-CN-DEV",
+    "cpurl": "http://CNCORPAZDMARW01.ap.loreal.intra/APAC-CN-DEV-CP/api/HealthCheck?WebApp=APAC-CN-DEV",
+    "healthurl": "http://CNCORPAZDMARW01.ap.loreal.intra/APAC-CN-DEV/Health/MarsHealthCheck.aspx?timeout=3000"
+
+  },
+  {
+
+    "retailid": "retailid2",
+    "marsid": "marsid2",
+    "cpid": "cpid2",
+    "healthid": "healthid2",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  },
+  {
+
+    "retailid": "retailid3",
+    "marsid": "marsid3",
+    "cpid": "cpid3",
+    "healthid": "healthid3",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  },
+  {
+
+    "retailid": "retailid4",
+    "marsid": "marsid4",
+    "cpid": "cpid4",
+    "healthid": "healthid4",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  },
+  {
+
+    "retailid": "retailid5",
+    "marsid": "marsid5",
+    "cpid": "cpid5",
+    "healthid": "healthid5",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  },
+  {
+
+    "retailid": "retailid6",
+    "marsid": "marsid6",
+    "cpid": "cpid6",
+    "healthid": "healthid6",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  },
+  {
+
+    "retailid": "retailid7",
+    "marsid": "marsid7",
+    "cpid": "cpid7",
+    "healthid": "healthid7",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  },
+  {
+
+    "retailid": "retailid8",
+    "marsid": "marsid8",
+    "cpid": "cpid8",
+    "healthid": "healthid8",
+    "retailurl": "",
+    "marsurl": "",
+    "cpurl": "",
+    "healthurl": ""
+  }
+]
+

@@ -1,0 +1,903 @@
+﻿@page "/"
+@using System.Net.Http
+@using System.Collections.Generic;
+@using System.Threading.Tasks;
+@using System.Text.Json;
+@inject IJSRuntime JSRuntime
+
+@inject HttpClient http
+
+<style>
+    body {
+        background-color: lightgray
+    }
+
+    .hub {
+        border-radius: 25px;
+        border: 2px solid #2191ad;
+        border: 2px solid #218cad;
+        padding: 10px;
+        width: 100%;
+        height: 21vh;
+        margin-top: 2.5px;
+        background-color: lemonchiffon;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .arrange {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 70%;
+        margin-top: 2px;
+    }
+
+    .country {
+        border-radius: 25px;
+        border: 2px solid #218cad;
+        padding: 0.71vw;
+        width: 8.5vw;
+        height: 17.8vh;
+        font-size: 85%;
+        background-color: #f7efe3;
+        margin-left: 0.45vw;
+        float: right;
+    }
+
+    .webserver {
+        border-radius: 25px;
+        border: 2px solid #218cad;
+        padding: 2.5px;
+        width: 8.5vw;
+        height: 3.5vh;
+        text-align: center;
+        align-items: center;
+        margin-left: 0.55vw;
+        margin-top: 1.5vw;
+        background-color: peachpuff;
+        float: left;
+    }
+
+    .api {
+        margin-top: 5px;
+        margin-top: 1px;
+        padding: 2.5px;
+        width: 7vw;
+        height: 3.5vh;
+        align-self: flex-end;
+        background-color: whitesmoke;
+        border-radius: 10px;
+        border: 2px solid;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 80%;
+        display: inline-block;
+        position: relative;
+        color: black;
+        text-align: center;
+    }
+
+
+
+    .red {
+        margin-left: 180px;
+    }
+
+    .dropdown {
+        max-width: 250px;
+        margin: 0;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #999;
+        width: 220px;
+        font-size: 18px;
+        color: #2191ad;
+        background-color: #faf7f7;
+        border-radius: 5px;
+    }
+
+    .hidden {
+        visibility: hidden;
+    }
+
+    #border {
+        display: flex;
+        flex-wrap: wrap;
+        width: auto;
+    }
+</style>
+
+
+
+<div class="red">
+    <label for="country"></label>
+    <select @bind-value="Country" class="dropdown" @onchange="onchange" @bind-value:event="oninput">
+        <option value="Country">Countries</option>
+        <option value="SG">SG</option>
+        <option value="ANZ">ANZ</option>
+        <option value="TH">TH</option>
+        <option value="MY">MY</option>
+
+    </select>
+
+
+    <label for="webserver"></label>
+    <select @bind-value="Webserver" class="dropdown" @onchange="onchange" @bind-value:event="oninput">
+        <option value="WebServer">WebServers</option>
+        <option value="WEBSERVER01">WEBSERVER01</option>
+        <option value="WEBSERVER02">WEBSERVER02</option>
+        <option value="WEBSERVER03">WEBSERVER03</option>
+        <option value="WEBSERVER04">WEBSERVER04</option>
+        <option value="WEBSERVER05">WEBSERVER05</option>
+        <option value="WEBSERVER06">WEBSERVER06</option>
+        <option value="WEBSERVER07">WEBSERVER07</option>
+        <option value="WEBSERVER08">WEBSERVER08</option>
+    </select>
+    <label for="applicationapi"></label>
+    <select @bind-value="Api" class="dropdown" @onchange="onchange" @bind-value:event="oninput">
+        <option value="ApplicationApi">ApplicationApi</option>
+        <option value="RETAIL API">RETAIL API</option>
+        <option value="MARS API">MARS API</option>
+        <option value="Customer Profile">CUSTOMER PROFILE</option>
+        <option value="MARS HEALTH">MARS HEALTH</option>
+
+    </select>
+
+</div>
+
+<table>
+
+    <tbody>
+        <div id="border">
+            <div style="margin-left:35px">
+                @foreach (var website in WEBSERVERFUNCTION)
+                {
+
+                    <div class="webserver">
+                        <div class="hidden" style="font-size: 0; text-indent: -9999px; "> @website.webserver</div>
+                        <div style="font-size:70%;padding:0px"> @website.Dwebserver</div>
+
+                    </div>
+                }
+            </div>
+
+            @foreach (var country in countryfunction)
+            {
+                <div class="hub">
+                    <div style="font-size: 95%; display: flex; align-items: center; height: 15vh; "> @country.country</div>
+
+
+
+                    @foreach (var website in SGWEBSERVERFUNCTION)
+                    {
+
+                <tr>
+                    <td>
+
+
+                        <div class="country">
+                            <div class="hidden" style="font-size: 0; text-indent: -9999px; "> @website.webserver</div>
+
+
+                            @foreach (var r_api in apiChecks)
+                            {
+
+
+                                <div class="api" id="@website.SGretailid" @onclick="((arg) => onClick(website.SGretailid))">
+                                    @r_api.api
+                                </div>
+
+                            }
+                            @foreach (var m_api in apimars)
+                            {
+
+
+                                <div class="api" id="@website.SGmarsid" @onclick="((arg) => onClick(website.SGmarsid))">
+                                    @m_api.api
+                                </div>
+
+                            }
+                            @foreach (var c_api in apiCP)
+                            {
+
+
+                                <div class="api" id="@website.SGcpid" @onclick="((arg) => onClick(website.SGcpid))">
+                                    @c_api.api
+                                </div>
+
+
+                            }
+                            @foreach (var h_api in apihealth)
+                            {
+
+                                <div class="api" id="@website.SGhealthid" @onclick="((arg) => onClick(website.SGhealthid))">
+
+                                    @h_api.api
+                                </div>
+
+                            }
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+            }
+
+                    </div>
+
+                }
+            @foreach (var country in ANZfunction)
+            {
+                <div class="hub">
+                    <div style="font-size: 75%; display: flex; align-items: center; height: 15vh;"> @country.country</div>
+
+
+                    @foreach (var website in ANZWEBSERVERFUNCTION)
+                    {
+
+                    <tr>
+                        <td>
+
+
+                            <div class="country">
+                                <div class="hidden" style="font-size: 0; text-indent: -9999px; "> @website.webserver</div>
+
+
+                                @foreach (var r_api in apiChecks)
+                                {
+
+
+                                    <div class="api" id="@website.ANZretailid" @onclick="((arg) => onClick(website.ANZretailid))">
+                                        @r_api.api
+                                    </div>
+
+                                }
+                                @foreach (var m_api in apimars)
+                                {
+
+
+                                    <div class="api" id="@website.ANZmarsid" @onclick="((arg) => onClick(website.ANZmarsid))">
+                                        @m_api.api
+                                    </div>
+
+                                }
+                                @foreach (var c_api in apiCP)
+                                {
+
+
+                                    <div class="api" id="@website.ANZcpid" @onclick="((arg) => onClick(website.ANZcpid))">
+                                        @c_api.api
+                                    </div>
+
+
+                                }
+                                @foreach (var h_api in apihealth)
+                                {
+
+
+                                    <div class="api" id="@website.ANZhealthid" @onclick="((arg) => onClick(website.ANZhealthid))">
+                                        @h_api.api
+
+                                    </div>
+
+                                }
+
+                            </div>
+
+
+                        </td>
+
+
+                    </tr>
+
+                }
+
+                    </div>
+                }
+            @foreach (var country in THAILANDFUNCTION)
+            {
+                <div class="hub">
+                    <div style="font-size: 95%; display: flex; align-items: center; height: 15vh;"> @country.country</div>
+
+
+                    @foreach (var website in THWEBSERVERFUNCTION)
+                    {
+
+                    <tr>
+                        <td>
+
+
+                            <div class="country">
+                                <div class="hidden" style="font-size: 0; text-indent: -9999px; "> @website.webserver</div>
+
+
+                                @foreach (var r_api in apiChecks)
+                                {
+
+
+                                    <div class="api" id="@website.THretailid" @onclick="((arg) => onClick(website.THretailid))">
+                                        @r_api.api
+                                    </div>
+
+                                }
+                                @foreach (var m_api in apimars)
+                                {
+
+
+                                    <div class="api" id="@website.THmarsid" @onclick="((arg) => onClick(website.THmarsid))">
+                                        @m_api.api
+                                    </div>
+
+                                }
+                                @foreach (var c_api in apiCP)
+                                {
+
+
+                                    <div class="api" id="@website.THcpid" @onclick="((arg) => onClick(website.THcpid))">
+                                        @c_api.api
+                                    </div>
+
+
+                                }
+                                @foreach (var h_api in apihealth)
+                                {
+
+                                    <div class="api" id="@website.THhealthid" @onclick="((arg) => onClick(website.THhealthid))">
+
+                                        @h_api.api
+                                    </div>
+
+                                }
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+
+                }
+
+                    </div>
+                }
+            @foreach (var country in MALAYSIAFUNCTION)
+            {
+                <div class="hub">
+                    <div style="font-size: 95%; display: flex; align-items: center; height: 15vh;"> @country.country</div>
+
+
+
+
+                    @foreach (var website in MYWEBSERVERFUNCTION)
+                    {
+
+                    <tr>
+                        <td>
+
+
+                            <div class="country">
+                                <div class="hidden" style="font-size: 0; text-indent: -9999px; "> @website.webserver</div>
+
+
+                                @foreach (var r_api in apiChecks)
+                                {
+
+                                    <div class="api" id="@website.MYretailid" @onclick="((arg) => onClick(website.MYretailid))">
+                                        @r_api.api
+                                    </div>
+
+                                }
+                                @foreach (var m_api in apimars)
+                                {
+
+                                    <div class="api" id="@website.MYmarsid" @onclick="((arg) => onClick(website.MYmarsid))">
+                                        @m_api.api
+                                    </div>
+
+                                }
+                                @foreach (var c_api in apiCP)
+                                {
+
+                                    <div class="api" id="@website.MYcpid" @onclick="((arg) => onClick(website.MYcpid))">
+                                        @c_api.api
+                                    </div>
+
+
+                                }
+                                @foreach (var h_api in apihealth)
+                                {
+
+                                    <div class="api" id="@website.MYhealthid" @onclick="((arg) => onClick(website.MYhealthid))">
+                                        @h_api.api
+
+                                    </div>
+
+                                }
+
+                            </div>
+
+
+                        </td>
+
+
+                    </tr>
+
+                }
+
+
+
+
+                    </div>
+                }
+            </div>
+
+        </tbody>
+    </table>
+
+
+    @code{
+        public class website
+        {
+            public string SGretailid { get; set; }
+            public string SGmarsid { get; set; }
+            public string SGcpid { get; set; }
+            public string SGhealthid { get; set; }
+            public string ANZretailid { get; set; }
+            public string ANZmarsid { get; set; }
+            public string ANZcpid { get; set; }
+            public string ANZhealthid { get; set; }
+
+            public string THretailid { get; set; }
+            public string THmarsid { get; set; }
+            public string THcpid { get; set; }
+            public string THhealthid { get; set; }
+            public string MYretailid { get; set; }
+            public string MYmarsid { get; set; }
+            public string MYcpid { get; set; }
+            public string MYhealthid { get; set; }
+            public string webserver { get; set; }
+            public string Dwebserver { get; set; }
+            public string SGretailurl { get; set; }
+            public string SGmarsurl { get; set; }
+            public string SGcpurl { get; set; }
+            public string SGhealthurl { get; set; }
+            public string ANZretailurl { get; set; }
+            public string ANZmarsurl { get; set; }
+            public string ANZcpurl { get; set; }
+            public string ANZhealthurl { get; set; }
+            public string THretailurl { get; set; }
+            public string THmarsurl { get; set; }
+            public string THcpurl { get; set; }
+            public string THhealthurl { get; set; }
+            public string MYretailurl { get; set; }
+            public string MYmarsurl { get; set; }
+            public string MYcpurl { get; set; }
+            public string MYhealthurl { get; set; }
+        }
+        private string indicater;
+        private int _repsonce;
+        private async Task sendRequest(String id, string url)
+        {
+            try
+            {
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var responce = await httpClient.GetAsync(url);
+                    _repsonce = (int)responce.StatusCode;
+                    if (responce.IsSuccessStatusCode)
+                    {
+                        var element = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id);
+                        await element.InvokeVoidAsync("setAttribute", "style", "border: 2px solid green;background-color:lightgreen;");
+                    }
+                    else
+                    {
+                        var element = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id);
+                        await element.InvokeVoidAsync("setAttribute", "style", "border: 2px solid yellow;");
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                var element = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id);
+                await element.InvokeVoidAsync("setAttribute", "style", "border: 2px solid red;background-color:#eb0d0db2;");
+
+            }
+
+
+
+        }
+
+
+        public List<website> SGwebserver = new List<website>
+{
+       new website{webserver="WEBSERVER01", SGretailid="SGretailid1",SGmarsid="SGmarsid1",SGcpid="SGcpid1",SGhealthid="SGhealthid1"},
+       new website{webserver="WEBSERVER02", SGretailid="SGretailid2",SGmarsid="SGmarsid2",SGcpid="SGcpid2",SGhealthid="SGhealthid2"},
+       new website{webserver="WEBSERVER03", SGretailid="SGretailid3",SGmarsid="SGmarsid3",SGcpid="SGcpid3",SGhealthid="SGhealthid3"},
+       new website{webserver="WEBSERVER04", SGretailid="SGretailid4",SGmarsid="SGmarsid4",SGcpid="SGcpid4",SGhealthid="SGhealthid4" },
+       new website{webserver="WEBSERVER05", SGretailid="SGretailid5",SGmarsid="SGmarsid5",SGcpid="SGcpid5",SGhealthid="SGhealthid5"},
+       new website{webserver="WEBSERVER06", SGretailid="SGretailid6",SGmarsid="SGmarsid6",SGcpid="SGcpid6",SGhealthid="SGhealthid6"},
+       new website{webserver="WEBSERVER07", SGretailid="SGretailid7",SGmarsid="SGmarsid7",SGcpid="SGcpid7",SGhealthid="SGhealthid7"},
+       new website{webserver="WEBSERVER08", SGretailid="SGretailid8",SGmarsid="SGmarsid8",SGcpid="SGcpid8",SGhealthid="SGhealthid8"}
+   };
+
+        private string Webserver { get; set; }
+        private List<website> SGWEBSERVERFUNCTION =>
+           Webserver == null ? SGwebserver : SGwebserver.Where(w => w.webserver == Webserver || "WebServer" == Webserver).ToList();
+
+        public List<website> ANZwebserver = new List<website>
+{
+       new website{webserver="WEBSERVER01", ANZretailid="ANZretailid1",ANZmarsid="ANZmarsid1",ANZcpid="ANZcpid1",ANZhealthid="ANZhealthid1"},
+       new website{webserver="WEBSERVER02", ANZretailid="ANZretailid2",ANZmarsid="ANZmarsid2",ANZcpid="ANZcpid2",ANZhealthid="ANZhealthid2"},
+       new website{webserver="WEBSERVER03", ANZretailid="ANZretailid3",ANZmarsid="ANZmarsid3",ANZcpid="ANZcpid3",ANZhealthid="ANZhealthid3" },
+       new website{webserver="WEBSERVER04", ANZretailid="ANZretailid4",ANZmarsid="ANZmarsid4",ANZcpid="ANZcpid4",ANZhealthid="ANZhealthid4"},
+       new website{webserver="WEBSERVER05", ANZretailid="ANZretailid5",ANZmarsid="ANZmarsid5",ANZcpid="ANZcpid5",ANZhealthid="ANZhealthid5"},
+       new website{webserver="WEBSERVER06", ANZretailid="ANZretailid6",ANZmarsid="ANZmarsid6",ANZcpid="ANZcpid6",ANZhealthid="ANZhealthid6"},
+       new website{webserver="WEBSERVER07", ANZretailid="ANZretailid7",ANZmarsid="ANZmarsid7",ANZcpid="ANZcpid7",ANZhealthid="ANZhealthid7"},
+       new website{webserver="WEBSERVER08", ANZretailid="ANZretailid8",ANZmarsid="ANZmarsid8",ANZcpid="ANZcpid8",ANZhealthid="ANZhealthid8"}
+   };
+
+        private List<website> ANZWEBSERVERFUNCTION =>
+           Webserver == null ? ANZwebserver : ANZwebserver.Where(w => w.webserver == Webserver || "WebServer" == Webserver).ToList();
+        public List<website> THwebserver = new List<website>
+{
+       new website{webserver="WEBSERVER01", THretailid="THretailid1",THmarsid="THmarsid1",THcpid="THcpid1",THhealthid="THhealthid1"},
+       new website{webserver="WEBSERVER02", THretailid="THretailid2",THmarsid="THmarsid2",THcpid="THcpid2",THhealthid="THhealthid2"},
+       new website{webserver="WEBSERVER03", THretailid="THretailid3",THmarsid="THmarsid3",THcpid="THcpid3",THhealthid="THhealthid3"},
+       new website{webserver="WEBSERVER04", THretailid="THretailid4",THmarsid="THmarsid4",THcpid="THcpid4",THhealthid="THhealthid4"},
+       new website{webserver="WEBSERVER05", THretailid="THretailid5",THmarsid="THmarsid5",THcpid="THcpid5",THhealthid="THhealthid5" },
+       new website{webserver="WEBSERVER06", THretailid="THretailid6",THmarsid="THmarsid6",THcpid="THcpid6",THhealthid="THhealthid6"},
+       new website{webserver="WEBSERVER07", THretailid="THretailid7",THmarsid="THmarsid7",THcpid="THcpid7",THhealthid="THhealthid7"},
+       new website{webserver="WEBSERVER08", THretailid="THretailid8",THmarsid="THmarsid8",THcpid="THcpid8",THhealthid="THhealthid8"}
+   };
+
+        private List<website> THWEBSERVERFUNCTION =>
+           Webserver == null ? THwebserver : THwebserver.Where(w => w.webserver == Webserver || "WebServer" == Webserver).ToList();
+
+        public List<website> MYwebserver = new List<website>
+{
+       new website{webserver="WEBSERVER01", MYretailid="MYretailid1",MYmarsid="MYmarsid1",MYcpid="MYcpid1",MYhealthid="MYhealthid1"},
+       new website{webserver="WEBSERVER02", MYretailid="MYretailid2",MYmarsid="MYmarsid2",MYcpid="MYcpid2",MYhealthid="MYhealthid2" },
+       new website{webserver="WEBSERVER03", MYretailid="MYretailid3",MYmarsid="MYmarsid3",MYcpid="MYcpid3",MYhealthid="MYhealthid3"},
+       new website{webserver="WEBSERVER04", MYretailid="MYretailid4",MYmarsid="MYmarsid4",MYcpid="MYcpid4",MYhealthid="MYhealthid4"},
+       new website{webserver="WEBSERVER05", MYretailid="MYretailid5",MYmarsid="MYmarsid5",MYcpid="MYcpid5",MYhealthid="MYhealthid5"},
+       new website{webserver="WEBSERVER06", MYretailid="MYretailid6",MYmarsid="MYmarsid6",MYcpid="MYcpid6",MYhealthid="MYhealthid6"},
+       new website{webserver="WEBSERVER07", MYretailid="MYretailid7",MYmarsid="MYmarsid7",MYcpid="MYcpid7",MYhealthid="MYhealthid7"},
+       new website{webserver="WEBSERVER08", MYretailid="MYretailid8",MYmarsid="MYmarsid8",MYcpid="MYcpid8",MYhealthid="MYhealthid8"}
+   };
+
+        private List<website> MYWEBSERVERFUNCTION =>
+           Webserver == null ? MYwebserver : MYwebserver.Where(w => w.webserver == Webserver || "WebServer" == Webserver).ToList();
+
+
+
+        public List<website> webserver = new List<website>
+{
+       new website{webserver="WEBSERVER01",Dwebserver="SGLORMARW01"},
+       new website{webserver="WEBSERVER02",Dwebserver="SGLORMARW02" },
+       new website{webserver="WEBSERVER03",Dwebserver="SGLORMARW03"},
+       new website{webserver="WEBSERVER04",Dwebserver="SGLORMARW04"},
+       new website{webserver="WEBSERVER05",Dwebserver="SGLORMARW05"},
+       new website{webserver="WEBSERVER06",Dwebserver="SGLORMARW06"},
+       new website{webserver="WEBSERVER07",Dwebserver="SGLORMARW07"},
+       new website{webserver="WEBSERVER08",Dwebserver="SGLORMARW08"}
+   };
+
+        private List<website> WEBSERVERFUNCTION =>
+           Webserver == null ? webserver : webserver.Where(w => w.webserver == Webserver || "WebServer" == Webserver).ToList();
+        private List<website> sgwebserver { get; set; }
+        private List<website> anzwebserver { get; set; }
+        private List<website> thwebserver { get; set; }
+        private List<website> mywebserver { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+
+
+            var sgresponseMessage = await http.GetAsync("sample-data/SG_HUB/SG_URLS.json");
+            var sg_repsonce = (int)sgresponseMessage.StatusCode;
+            var sgconvert = await sgresponseMessage.Content.ReadAsStringAsync();
+            sgwebserver = JsonSerializer.Deserialize<List<website>>(sgconvert);
+
+            var anzresponseMessage = await http.GetAsync("sample-data/SG_HUB/ANZ_URLS.json");
+            var anz_repsonce = (int)anzresponseMessage.StatusCode;
+            var anzconvert = await anzresponseMessage.Content.ReadAsStringAsync();
+            anzwebserver = JsonSerializer.Deserialize<List<website>>(anzconvert);
+
+            var thresponseMessage = await http.GetAsync("sample-data/SG_HUB/TH_URLS.json");
+            var th_repsonce = (int)thresponseMessage.StatusCode;
+            var thconvert = await thresponseMessage.Content.ReadAsStringAsync();
+            thwebserver = JsonSerializer.Deserialize<List<website>>(thconvert);
+
+            var responseMessage = await http.GetAsync("sample-data/SG_HUB/MY_URLS.json");
+            var _repsonce = (int)responseMessage.StatusCode;
+            var convert = await responseMessage.Content.ReadAsStringAsync();
+            mywebserver = JsonSerializer.Deserialize<List<website>>(convert);
+
+
+            foreach (var id in sgwebserver)
+            {
+                await sendRequest(id.SGretailid, id.SGretailurl);
+                await sendRequest(id.SGmarsid, id.SGmarsurl);
+                await sendRequest(id.SGcpid, id.SGcpurl);
+                await sendRequest(id.SGhealthid, id.SGhealthurl);
+            }
+            foreach (var id in anzwebserver)
+            {
+                await sendRequest(id.ANZretailid, id.ANZretailurl);
+                await sendRequest(id.ANZmarsid, id.ANZmarsurl);
+                await sendRequest(id.ANZcpid, id.ANZcpurl);
+                await sendRequest(id.ANZhealthid, id.ANZhealthurl);
+            }
+            foreach (var id in thwebserver)
+            {
+                await sendRequest(id.THretailid, id.THretailurl);
+                await sendRequest(id.THmarsid, id.THmarsurl);
+                await sendRequest(id.THcpid, id.THcpurl);
+                await sendRequest(id.THhealthid, id.THhealthurl);
+            }
+            foreach (var id in mywebserver)
+            {
+                await sendRequest(id.MYretailid, id.MYretailurl);
+                await sendRequest(id.MYmarsid, id.MYmarsurl);
+                await sendRequest(id.MYcpid, id.MYcpurl);
+                await sendRequest(id.MYhealthid, id.MYhealthurl);
+            }
+        }
+        public void onchange(ChangeEventArgs args)
+        {
+            var task = new List<Task>();
+            foreach (var id in sgwebserver)
+            {
+                task.Add(sendRequest(id.SGretailid, id.SGretailurl));
+                task.Add(sendRequest(id.SGmarsid, id.SGmarsurl));
+                task.Add(sendRequest(id.SGcpid, id.SGcpurl));
+                task.Add(sendRequest(id.SGhealthid, id.SGhealthurl));
+            }
+            foreach (var id in anzwebserver)
+            {
+                task.Add(sendRequest(id.ANZretailid, id.ANZretailurl));
+                task.Add(sendRequest(id.ANZmarsid, id.ANZmarsurl));
+                task.Add(sendRequest(id.ANZcpid, id.ANZcpurl));
+                task.Add(sendRequest(id.ANZhealthid, id.ANZhealthurl));
+            }
+            foreach (var id in thwebserver)
+            {
+                task.Add(sendRequest(id.THretailid, id.THretailurl));
+                task.Add(sendRequest(id.THmarsid, id.THmarsurl));
+                task.Add(sendRequest(id.THcpid, id.THcpurl));
+                task.Add(sendRequest(id.THhealthid, id.THhealthurl));
+            }
+            foreach (var id in mywebserver)
+            {
+                task.Add(sendRequest(id.MYretailid, id.MYretailurl));
+                task.Add(sendRequest(id.MYmarsid, id.MYmarsurl));
+                task.Add(sendRequest(id.MYcpid, id.MYcpurl));
+                task.Add(sendRequest(id.MYhealthid, id.MYhealthurl));
+            }
+            Task.WhenAll(task);
+        }
+        public class countryCheck
+        {
+            public string country { get; set; }
+        }
+        public List<countryCheck> GetCountries = new List<countryCheck>
+{
+        new countryCheck{country="SG" },
+
+
+    };
+        private string Country { get; set; }
+        private List<countryCheck> countryfunction =>
+            Country == null ? GetCountries : GetCountries.Where(c => c.country == Country || "Country" == Country).ToList();
+
+        public List<countryCheck> setCountries = new List<countryCheck>
+{
+
+        new countryCheck{country="ANZ" },
+
+
+    };
+
+        private List<countryCheck> ANZfunction =>
+            Country == null ? setCountries : setCountries.Where(c => c.country == Country || "Country" == Country).ToList();
+
+        public List<countryCheck> putCountries = new List<countryCheck>
+{
+
+
+        new countryCheck{country="TH" }
+
+
+    };
+
+        private List<countryCheck> THAILANDFUNCTION =>
+            Country == null ? putCountries : putCountries.Where(c => c.country == Country || "Country" == Country).ToList();
+        public List<countryCheck> postCountries = new List<countryCheck>
+{
+
+
+
+        new countryCheck{country="MY" }
+
+    };
+
+        private List<countryCheck> MALAYSIAFUNCTION =>
+            Country == null ? postCountries : postCountries.Where(c => c.country == Country || "Country" == Country).ToList();
+
+
+
+
+
+        private string Api { get; set; }
+        public class ApiCheck
+        {
+
+            public string api { get; set; }
+        }
+        public List<ApiCheck> ApiChecks = new List<ApiCheck>
+{
+
+        new ApiCheck{ api="RETAIL API"},
+
+
+    };
+
+
+        private List<ApiCheck> apiChecks =>
+        Api == null ? ApiChecks : ApiChecks.Where(a => a.api == Api || "ApplicationApi" == Api).ToList();
+        public List<ApiCheck> Apimars = new List<ApiCheck>
+{
+            new ApiCheck{api="MARS API"}
+        };
+
+        private List<ApiCheck> apimars =>
+            Api == null ? Apimars : Apimars.Where(m => m.api == Api || "ApplicationApi" == Api).ToList();
+
+
+        public List<ApiCheck> CP = new List<ApiCheck>
+{
+             new ApiCheck{api="Customer Profile"}
+        };
+
+        private List<ApiCheck> apiCP =>
+            Api == null ? CP : CP.Where(m => m.api == Api || "ApplicationApi" == Api).ToList();
+        public List<ApiCheck> Apihealth = new List<ApiCheck>
+{
+            new ApiCheck{api="MARS HEALTH"}
+        };
+
+        private List<ApiCheck> apihealth =>
+            Api == null ? Apihealth : Apihealth.Where(m => m.api == Api || "ApplicationApi" == Api).ToList();
+
+        private async Task clickRequest(String id, string url)
+        {
+            try
+            {
+
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var responce = await httpClient.GetAsync(url);
+                    var _repsonce = (int)responce.StatusCode;
+                    if (responce.IsSuccessStatusCode)
+                    {
+                        await JSRuntime.InvokeVoidAsync("alert", $"StatusCode : { responce.StatusCode} : {_repsonce}");
+                        await Task.CompletedTask;
+
+                    }
+                    else
+                    {
+                        await JSRuntime.InvokeVoidAsync("alert", $"StatusCode : { responce.StatusCode} : {_repsonce}");
+                        await Task.CompletedTask;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"{e.Message}");
+                await Task.CompletedTask;
+            }
+
+
+        }
+        public async Task onClick(string id)
+        {
+            @foreach (var get in sgwebserver)
+            {
+                if (get.SGretailid == id)
+                {
+                    await clickRequest(id, get.SGretailurl);
+                }
+
+
+
+                else if (get.SGmarsid == id)
+                {
+                    await clickRequest(id, get.SGmarsurl);
+                }
+
+
+
+                else if (get.SGcpid == id)
+                {
+                    await clickRequest(id, get.SGcpurl);
+                }
+
+
+
+                else if (get.SGhealthid == id)
+                {
+                    await clickRequest(id, get.SGhealthurl);
+                }
+
+
+
+
+            }
+            foreach (var get in anzwebserver)
+            {
+                if (get.ANZretailid == id)
+                {
+                    await clickRequest(id, get.ANZretailurl);
+                }
+                else if (get.ANZmarsid == id)
+                {
+                    await clickRequest(id, get.ANZmarsurl);
+                }
+                else if (get.ANZcpid == id)
+                {
+                    await clickRequest(id, get.ANZcpurl);
+                }
+                else if (get.ANZhealthid == id)
+                {
+                    await clickRequest(id, get.ANZhealthurl);
+                }
+            }
+            foreach (var get in thwebserver)
+            {
+                if (get.THretailid == id)
+                {
+                    await clickRequest(id, get.THretailurl);
+                }
+                else if (get.THmarsid == id)
+                {
+                    await clickRequest(id, get.THmarsurl);
+                }
+                else if (get.THcpid == id)
+                {
+                    await clickRequest(id, get.THcpurl);
+                }
+                else if (get.THhealthid == id)
+                {
+                    await clickRequest(id, get.THhealthurl);
+                }
+            }
+            foreach (var get in mywebserver)
+            {
+                if (get.MYretailid == id)
+                {
+                    await clickRequest(id, get.MYretailurl);
+                }
+                else if (get.MYcpid == id)
+                {
+                    await clickRequest(id, get.MYcpurl);
+                }
+                else if (get.MYmarsid == id)
+                {
+                    await clickRequest(id, get.MYmarsurl);
+                }
+                else if (get.MYhealthid == id)
+                {
+                    await clickRequest(id, get.MYhealthurl);
+                }
+            }
+
+
+        }
+    }
+
